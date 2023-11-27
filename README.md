@@ -2,6 +2,9 @@
 
 Nav GUI 1.0 is an interactive graphical user interface application developed for the evaluation and analysis of navigation algorithms, particularly in the field of robotic navigation. This tool facilitates the processing of image and point cloud data, providing features like image loading, feature matching, point cloud generation, and action determination for navigation tasks.
 
+![GUI Screenshot](others/gui.png)
+
+
 ## Features
 
 - **Image Loading**: Browse and load color images from a specified directory based on user-defined IDs.
