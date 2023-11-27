@@ -31,6 +31,10 @@ To run Nav GUI 1.0:
 2. Run the script with Python by executing: `python nav_gui.py`.
 3. Use the GUI to browse and load images, match features, generate and process point clouds, and determine navigation actions.
 
+### Demo Images
+
+Demo images are provided in the `demo_images` folder for quick testing. The GUI is ready to be tested using these images. For reliable action output, use frames 10 and 20. Testing with frames 10 and 100 will not yield a reliable action, demonstrating the tool's range of functionality.
+
 ## Contributing
 
 Contributions to Nav GUI 1.0 are welcome. Please feel free to fork the repository, make changes, and submit pull requests.
