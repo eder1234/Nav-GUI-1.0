@@ -83,7 +83,7 @@ def load_images():
 def match_orb_keypoints(img1, img2):
     global kp1, kp2, matches
     # Initialize ORB detector
-    orb = cv2.ORB_create()
+    orb = cv2.ORB_create(nfeatures=1000)
     # Find the keypoints and descriptors with ORB
     kp1, des1 = orb.detectAndCompute(img1, None)
     kp2, des2 = orb.detectAndCompute(img2, None)
@@ -189,7 +189,7 @@ def get_3d_points(kp1, kp2, matches, depth_img1, depth_img2, K):
 
 def execute_global_registration(source_pcd, target_pcd, source_fpfh, target_fpfh, distance_threshold):
     result = o3d.pipelines.registration.registration_ransac_based_on_feature_matching(
-        source_pcd, target_pcd, source_fpfh, target_fpfh, distance_threshold,
+        source_pcd, target_pcd, source_fpfh, target_fpfh, distance_threshold*2, #distance doubled
         o3d.pipelines.registration.TransformationEstimationPointToPoint(False), 4,
         [o3d.pipelines.registration.CorrespondenceCheckerBasedOnEdgeLength(0.9),
          o3d.pipelines.registration.CorrespondenceCheckerBasedOnDistance(distance_threshold)],
@@ -199,7 +199,7 @@ def execute_global_registration(source_pcd, target_pcd, source_fpfh, target_fpfh
 
 def refine_registration(source_pcd, target_pcd, distance_threshold, result_ransac):
     result = o3d.pipelines.registration.registration_icp(
-        source_pcd, target_pcd, distance_threshold, result_ransac.transformation,
+        source_pcd, target_pcd, distance_threshold*1.5, result_ransac.transformation, #increasing distance
         o3d.pipelines.registration.TransformationEstimationPointToPoint())
     return result
 
@@ -244,6 +244,12 @@ def compute_action():
     # Check if ICP refinement was successful
     if result_icp.fitness < 0.1:  # Fitness threshold can be adjusted
         messagebox.showerror("Error", "ICP registration failed.")
+        
+        transformed_pcd = copy.deepcopy(source_pcd)
+        transformed_pcd.transform(result_icp.transformation)
+        # Determine action based on the transformation matrix
+        action = determine_bot_action(result_icp.transformation)
+        print(f'Action would be: {action}')
         return
     
     transformed_pcd = copy.deepcopy(source_pcd)
